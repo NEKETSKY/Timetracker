@@ -1,0 +1,23 @@
+CREATE TABLE groups
+(
+    group_id SERIAL PRIMARY KEY,
+    title    VARCHAR(255)
+);
+
+CREATE TABLE tasks
+(
+    task_id  SERIAL PRIMARY KEY,
+    title    VARCHAR(255),
+    group_id INTEGER,
+    FOREIGN KEY (group_id) REFERENCES groups (group_id) ON DELETE CASCADE
+);
+
+CREATE TABLE timeframes
+(
+    task_id    int,
+    FOREIGN KEY (task_id) REFERENCES tasks (task_id) ON DELETE CASCADE,
+    time_start VARCHAR(255) NOT NULL,
+    time_end   VARCHAR(255) NOT NULL
+);
+
+INSERT INTO groups(title) VALUES ('test1'),('test2'),('test3')
