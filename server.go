@@ -14,13 +14,11 @@ func main() {
 	defer database.Close()
 
 	router := mux.NewRouter()
-
 	GroupsRouter := router.PathPrefix("/groups").Subrouter()
-//	TasksRouter := router.PathPrefix("/tasks").Subrouter()
-//	TimeframesRouter := router.PathPrefix("/timeframes").Subrouter()
+	TasksRouter := router.PathPrefix("/tasks").Subrouter()
+	TimeframesRouter := router.PathPrefix("/timeframes").Subrouter()
 
 	GroupsRouter.HandleFunc("/", handlers.GetGroups).Methods(http.MethodGet)
-   /*
 	GroupsRouter.HandleFunc("/", handlers.CreateGroup).Methods(http.MethodPost)
 	GroupsRouter.HandleFunc("/{id}", handlers.UpdateGroup).Methods(http.MethodPut)
 	GroupsRouter.HandleFunc("/{id}", handlers.DeleteGroup).Methods(http.MethodDelete)
@@ -33,7 +31,6 @@ func main() {
 	TimeframesRouter.HandleFunc("/", handlers.CreateTimeframe).Methods(http.MethodPost)
 	TimeframesRouter.HandleFunc("/{id}", handlers.DeleteTimeframe).Methods(http.MethodDelete)
 
- */
 	log.Println("Server starting on port: 8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
 
