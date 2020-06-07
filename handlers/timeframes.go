@@ -4,27 +4,46 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/neketsky/Timetracker/dbrepository"
+	"log"
 	"net/http"
 	"strconv"
 )
 
-// ========================================= НЕ готово & НЕ протестировано =========================================
 func CreateTimeframe(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var timeframe dbrepository.Timeframe
 	err := json.NewDecoder(r.Body).Decode(&timeframe)
-	// ОБРАБОТАТЬ ОШИБКУ
+	if err != nil {
+		log.Println(err)
+		ReturnError(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
 	defer r.Body.Close()
 	timeframe, err = dbrepository.CreateTimeframe(timeframe)
-	// ОБРАБОТАТЬ ОШИБКУ
-	err = json.NewEncoder(w).Encode(timeframe)
-	// ОБРАБОТАТЬ ОШИБКУ
+	if err != nil {
+		log.Println(err)
+		ReturnError(w, "Failed to create timeframe", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	if err = json.NewEncoder(w).Encode(timeframe); err != nil {
+		log.Println(err)
+	}
 }
 
-// ========================================= НЕ готово & НЕ протестировано =========================================
 func DeleteTimeframe(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	err := dbrepository.DeleteTimeframe(strconv.Atoi(params["id"]))
-	// ОБРАБОТАТЬ ОШИБКУ
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Println(err)
+		ReturnError(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+	if err = dbrepository.DeleteTimeframe(id); err !=nil {
+		log.Println(err)
+		ReturnError(w, "Failed to delete timeframe", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }

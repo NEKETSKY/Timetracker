@@ -11,7 +11,6 @@ import (
 
 var dbase *sql.DB
 
-// ========================================= готово & протестировано =========================================
 // DBInit - создает соединение с базой данных
 func DBInit() *sql.DB {
 
@@ -43,7 +42,6 @@ func GetDB() *sql.DB {
 }
 */
 
-// ========================================= готово & протестировано =========================================
 // GetGroups - получает из БД все группы и возвращает сформированный срез групп
 func GetGroups() (GroupsResponse, error) {
 
@@ -70,7 +68,6 @@ func GetGroups() (GroupsResponse, error) {
 	return groups, nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // CreateGroup - создает в БД новую группу с заданными значениями и возвращает эту запись
 func CreateGroup(group Group) (Group, error) {
 	var createdGroup Group
@@ -81,7 +78,6 @@ func CreateGroup(group Group) (Group, error) {
 	return createdGroup, nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // UpdateGroup - обновляет группу в БД по ID полученными значениями и возвращает обновленную запись
 func UpdateGroup(group Group) (Group, error) {
 	var updatedGroup Group
@@ -92,7 +88,6 @@ func UpdateGroup(group Group) (Group, error) {
 	return updatedGroup, nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // DeleteGroup - удаляет из БД группу по полученному ID
 func DeleteGroup(id int) error {
 	_, err := dbase.Exec("DELETE FROM groups WHERE group_id = $1", id)
@@ -102,7 +97,6 @@ func DeleteGroup(id int) error {
 	return nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // GetTasks - получает из БД все таски и возвращает сформированный срез тасков
 func GetTasks() (TasksResponse, error) {
 
@@ -129,7 +123,6 @@ func GetTasks() (TasksResponse, error) {
 	return tasks, nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // CreateTask - создает в БД новую таску с заданными значениями и возвращает эту запись
 func CreateTask(task Task) (Task, error) {
 	var createdTask Task
@@ -140,7 +133,6 @@ func CreateTask(task Task) (Task, error) {
 	return createdTask, nil
 }
 
-// ========================================= готово & протестировано =========================================
 // UpdateTask - обновляет таску в БД по ID полученными значениями и возвращает обновленную запись
 func UpdateTask(task Task) (Task, error) {
 	var updatedTask Task
@@ -151,7 +143,6 @@ func UpdateTask(task Task) (Task, error) {
 	return updatedTask, nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // DeleteTask - удаляет из БД таску по полученному ID
 func DeleteTask(id int) error {
 	_, err := dbase.Exec("DELETE FROM tasks WHERE task_id = $1", id)
@@ -161,7 +152,6 @@ func DeleteTask(id int) error {
 	return nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // CreateTimeframe - создает в БД новый таймфрейм с заданными значениями и возвращает эту запись
 func CreateTimeframe(timeframe Timeframe) (Timeframe, error) {
 	var createdTimeframe Timeframe
@@ -172,7 +162,6 @@ func CreateTimeframe(timeframe Timeframe) (Timeframe, error) {
 	return createdTimeframe, nil
 }
 
-// ========================================= готово & НЕ протестировано =========================================
 // DeleteTimeframe - удаляет из БД таймфрейм по полученному ID
 func DeleteTimeframe(id int) error {
 	_, err := dbase.Exec("DELETE FROM timeframes WHERE task_id = $1", id)
@@ -182,7 +171,6 @@ func DeleteTimeframe(id int) error {
 	return nil
 }
 
-// ========================================= готово & протестировано =========================================
 // getTasksByGroupID - получает из БД таски по ID и возвращает сформированный срез тасков
 func getTasksByGroupID(id int) ([]Task, error) {
 	var tasks []Task
@@ -208,7 +196,6 @@ func getTasksByGroupID(id int) ([]Task, error) {
 	return tasks, nil
 }
 
-// ========================================= готово & протестировано =========================================
 // getTimeframesByTaskID - получает из БД таймфреймы по ID и возвращает сформированный срез таймфреймов
 func getTimeframesByTaskID(id int) ([]Timeframe, error) {
 	var timeframes []Timeframe
