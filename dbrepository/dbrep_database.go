@@ -64,9 +64,7 @@ func (repo TaskRepositorySQL) DeleteGroup(id int) error {
 
 // GetTasks - получает из БД все таски и возвращает сформированный срез тасков
 func (repo TaskRepositorySQL) GetTasks() (TasksResponse, error) {
-
 	var tasks TasksResponse
-
 	tasksTable, err := repo.DB.Query("SELECT * FROM tasks ORDER BY task_id")
 	if err != nil {
 		return tasks, err
