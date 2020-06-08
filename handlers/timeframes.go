@@ -19,7 +19,7 @@ func CreateTimeframe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	timeframe, err = dbrepository.CreateTimeframe(timeframe)
+	timeframe, err = RepSQL.CreateTimeframe(timeframe)
 	if err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to create timeframe", http.StatusInternalServerError)
@@ -40,7 +40,7 @@ func DeleteTimeframe(w http.ResponseWriter, r *http.Request) {
 		ReturnError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
-	if err = dbrepository.DeleteTimeframe(id); err !=nil {
+	if err = RepSQL.DeleteTimeframe(id); err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to delete timeframe", http.StatusInternalServerError)
 		return

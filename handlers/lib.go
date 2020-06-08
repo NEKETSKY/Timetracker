@@ -1,10 +1,18 @@
 package handlers
 
 import (
+	"database/sql"
 	"encoding/json"
+	"github.com/neketsky/Timetracker/dbrepository"
 	"log"
 	"net/http"
 )
+
+var RepSQL dbrepository.TaskRepositorySQL
+
+func ConnectWithHandlers(dbase *sql.DB) {
+	RepSQL.DB = dbase
+}
 
 func ReturnError(w http.ResponseWriter, data interface{}, code int) {
 	message, err := json.Marshal(data)

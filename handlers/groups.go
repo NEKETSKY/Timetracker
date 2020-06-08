@@ -11,7 +11,7 @@ import (
 
 func GetGroups(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	groups, err := dbrepository.GetGroups()
+	groups, err := RepSQL.GetGroups()
 	if err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to get groups", http.StatusInternalServerError)
@@ -31,7 +31,7 @@ func CreateGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	group, err = dbrepository.CreateGroup(group)
+	group, err = RepSQL.CreateGroup(group)
 	if err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to create group", http.StatusInternalServerError)
@@ -58,7 +58,7 @@ func UpdateGroup(w http.ResponseWriter, r *http.Request) {
 		ReturnError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
-	group, err = dbrepository.UpdateGroup(group)
+	group, err = RepSQL.UpdateGroup(group)
 	if err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to update group", http.StatusInternalServerError)
@@ -79,7 +79,8 @@ func DeleteGroup(w http.ResponseWriter, r *http.Request) {
 		ReturnError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
-	if err = dbrepository.DeleteGroup(id); err != nil {
+
+	if err = RepSQL.DeleteGroup(id); err != nil {
 		ReturnError(w, "Failed to delete group", http.StatusInternalServerError)
 		return
 	}

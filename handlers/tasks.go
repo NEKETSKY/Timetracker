@@ -12,7 +12,7 @@ import (
 
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	tasks, err := dbrepository.GetTasks()
+	tasks, err := RepSQL.GetTasks()
 	if err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to get group", http.StatusInternalServerError)
@@ -34,7 +34,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	task, err = dbrepository.CreateTask(task)
+	task, err = RepSQL.CreateTask(task)
 	if err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to create task", http.StatusInternalServerError)
@@ -61,7 +61,7 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 		ReturnError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
-	task, err = dbrepository.UpdateTask(task)
+	task, err = RepSQL.UpdateTask(task)
 	if err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to update task", http.StatusInternalServerError)
@@ -82,7 +82,7 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 		ReturnError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
-	if err = dbrepository.DeleteTask(id); err !=nil {
+	if err = RepSQL.DeleteTask(id); err != nil {
 		log.Println(err)
 		ReturnError(w, "Failed to delete task", http.StatusInternalServerError)
 		return

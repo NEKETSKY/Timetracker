@@ -8,10 +8,12 @@ import (
 	"net/http"
 )
 
-func main() {
+var taskRepositorySQL = dbrepository.TaskRepositorySQL{}
 
-	database := dbrepository.DBInit()
-	defer database.Close()
+func main() {
+	taskRepositorySQL.DB = dbrepository.DBInit()
+	handlers.ConnectWithHandlers(taskRepositorySQL.DB)
+	defer taskRepositorySQL.DB.Close()
 
 	router := mux.NewRouter()
 	GroupsRouter := router.PathPrefix("/groups").Subrouter()
