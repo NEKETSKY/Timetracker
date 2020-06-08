@@ -10,6 +10,8 @@ import (
 
 var taskRepositorySQL = dbrepository.TaskRepositorySQL{}
 
+// я должен использовать интерфейс RepositorySQL где-то здесь?
+
 func main() {
 	taskRepositorySQL.DB = dbrepository.DBInit()
 	handlers.ConnectWithHandlers(taskRepositorySQL.DB)
