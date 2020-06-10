@@ -14,12 +14,13 @@ func DBInit() *sql.DB {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	dbName := os.Getenv("db_name")
-	dbUser := os.Getenv("db_user")
-	dbPassword := os.Getenv("db_pass")
-	dbHost := os.Getenv("db_host")
+	dbName := os.Getenv("POSTGRES_DB")
+	dbUser := os.Getenv("POSTGRES_USER")
+	dbPassword := os.Getenv("POSTGRES_PASSWORD")
+	dbHost := os.Getenv("POSTGRES_HOST")
+	dbPort := os.Getenv("POSTGRES_PORT")
 
-	dbUri := fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=disable", dbUser, dbPassword, dbHost, dbName)
+	dbUri := fmt.Sprintf("user=%s password=%s host=%s dbname=%s port=%s sslmode=disable", dbUser, dbPassword, dbHost, dbName, dbPort)
 	log.Println(dbUri)
 	db, err := sql.Open("postgres", dbUri)
 	if err != nil {

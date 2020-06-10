@@ -1,0 +1,39 @@
+version: '2.1'
+
+services:
+  timetracker:
+    build:
+      context: .
+      dockerfile: ./Backend.Dockerfile
+    depends_on:
+        - postgresql
+    restart: 'no'
+    env_file:
+        - .env
+    ports:
+      - 8080:8080
+
+  postgresql:
+    image: postgres:12.2
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 44312:5432
+
+
+  migrator:
+    build:
+      context: .
+      dockerfile: ./Migrator.Dockerfile
+    depends_on:
+      - postgresql
+    env_file:
+      - .env
+    restart: 'no'
+    volumes:
+    - ./migrations:/liquibase/changelog
+
+volumes:
+  postgres:

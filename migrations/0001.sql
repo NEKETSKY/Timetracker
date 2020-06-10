@@ -19,3 +19,5 @@ CREATE TABLE timeframes
     time_start TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     time_end   TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
+
+INSERT INTO groups(title) VALUES ('provero4ka')
