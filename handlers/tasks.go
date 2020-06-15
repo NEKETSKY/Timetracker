@@ -61,6 +61,11 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 		ReturnError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
+	if err := RepSQL.CheckTaskByID(task); err !=nil {
+		log.Println(err)
+		ReturnError(w, "Such group or task ID does not exist", http.StatusNotFound)
+		return
+	}
 	task, err = RepSQL.UpdateTask(task)
 	if err != nil {
 		log.Println(err)

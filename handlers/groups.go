@@ -58,6 +58,12 @@ func UpdateGroup(w http.ResponseWriter, r *http.Request) {
 		ReturnError(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
+	if err := RepSQL.CheckGroupByID(group); err !=nil {
+		log.Println(err)
+		ReturnError(w, "Such an ID does not exist", http.StatusNotFound)
+		return
+	}
+
 	group, err = RepSQL.UpdateGroup(group)
 	if err != nil {
 		log.Println(err)

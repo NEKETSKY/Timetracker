@@ -178,3 +178,28 @@ func (repo TaskRepositorySQL) getTimeframesByTaskID(id int) ([]Timeframe, error)
 	}
 	return timeframes, err
 }
+
+
+//CheckGroupByID - проверяет наличие группы по полученному ID
+func (repo TaskRepositorySQL) CheckGroupByID(group Group) error{
+	var id int
+	 err := repo.DB.QueryRow("SELECT group_id FROM groups WHERE group_id=$1", group.ID).Scan(&id)
+	 if err!= nil {
+		return err
+	}
+	return nil
+}
+
+//CheckGroupByID - проверяет наличие таски по полученному ID и валидность ID группы
+func (repo TaskRepositorySQL) CheckTaskByID(task Task) error{
+	var stub int
+	err := repo.DB.QueryRow("SELECT task_id FROM tasks WHERE task_id=$1", task.ID).Scan(&stub)
+	if err!= nil {
+		return err
+	}
+	err = repo.DB.QueryRow("SELECT group_id FROM tasks WHERE group_id=$1", task.GroupID).Scan(&stub)
+	if err!= nil {
+		return err
+	}
+	return nil
+}

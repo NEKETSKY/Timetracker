@@ -14,6 +14,8 @@ type (
 		DeleteTimeframe(id int) error
 		getTasksByGroupID(id int) ([]Task, error)
 		getTimeframesByTaskID(id int) ([]Timeframe, error)
+		checkGroupByID(group Group) error
+		checkTastByID(task Task) error
 	}
 
 	Group struct {
