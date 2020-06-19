@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-// DBInit - создает соединение с базой данных
+// DBInit - allows you to create a database connection
 func DBInit() *sql.DB {
 	err := godotenv.Load()
 	if err != nil {
