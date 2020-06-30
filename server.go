@@ -11,7 +11,12 @@ import (
 var taskRepositorySQL = dbrepository.TaskRepositorySQL{}
 
 func main() {
-	taskRepositorySQL.DB = dbrepository.DBInit()
+	var err error
+	taskRepositorySQL.DB, err = dbrepository.DBInit()
+	if err != nil {
+		log.Panic(err)
+	}
+
 	handlers.ConnectWithHandlers(taskRepositorySQL.DB)
 	defer taskRepositorySQL.DB.Close()
 
@@ -21,6 +26,7 @@ func main() {
 	TimeframesRouter := router.PathPrefix("/timeframes").Subrouter()
 
 	GroupsRouter.HandleFunc("/", handlers.GetGroups).Methods(http.MethodGet)
+
 	GroupsRouter.HandleFunc("/", handlers.CreateGroup).Methods(http.MethodPost)
 	GroupsRouter.HandleFunc("/{id}", handlers.UpdateGroup).Methods(http.MethodPut)
 	GroupsRouter.HandleFunc("/{id}", handlers.DeleteGroup).Methods(http.MethodDelete)

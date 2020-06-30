@@ -1,3 +1,5 @@
+.PHONY: start stop db_update restart all
+all: start db_update
 start:
 		docker-compose build
 		docker-compose up -d
@@ -9,7 +11,4 @@ db_update:
 		docker-compose run --rm migrator update
 		docker-compose run --rm migrator changelogSync
 
-restart:
-		docker-compose down
-		docker-compose build
-		docker-compose up -d
+restart: stop start

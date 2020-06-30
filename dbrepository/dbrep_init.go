@@ -9,10 +9,10 @@ import (
 )
 
 // DBInit - allows you to create a database connection
-func DBInit() *sql.DB {
+func DBInit() (*sql.DB, error) {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(err.Error())
+		return nil, err
 	}
 	dbName := os.Getenv("POSTGRES_DB")
 	dbUser := os.Getenv("POSTGRES_USER")
@@ -24,7 +24,10 @@ func DBInit() *sql.DB {
 	log.Println(dbUri)
 	db, err := sql.Open("postgres", dbUri)
 	if err != nil {
-		log.Fatal(err.Error())
+		return nil, err
 	}
-	return db
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+	return db, nil
 }

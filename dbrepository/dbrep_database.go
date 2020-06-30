@@ -12,7 +12,7 @@ type TaskRepositorySQL struct {
 // GetGroups - allows you to get all groups from the database
 func (repo TaskRepositorySQL) GetGroups() (GroupsResponse, error) {
 	var groups GroupsResponse
-	groupsTable, err := repo.DB.Query("SELECT * FROM groups ORDER BY group_id")
+	groupsTable, err := repo.DB.Query("SELECT * FROM groups ORDER BY id")
 	if err != nil {
 		return groups, err
 	}
@@ -30,13 +30,17 @@ func (repo TaskRepositorySQL) GetGroups() (GroupsResponse, error) {
 		}
 		groups.Groups = append(groups.Groups, group)
 	}
+
+	if err = groupsTable.Err(); err != nil {
+		return groups, err
+	}
 	return groups, nil
 }
 
 // CreateGroup - allows you to create a new group in database
 func (repo TaskRepositorySQL) CreateGroup(group Group) (Group, error) {
 	var createdGroup Group
-	err := repo.DB.QueryRow("INSERT INTO groups(title) VALUES($1) RETURNING group_id, title", group.Title).Scan(&createdGroup.ID, &createdGroup.Title)
+	err := repo.DB.QueryRow("INSERT INTO groups(title) VALUES($1) RETURNING id, title", group.Title).Scan(&createdGroup.ID, &createdGroup.Title)
 	if err != nil {
 		return createdGroup, err
 	}
@@ -46,7 +50,7 @@ func (repo TaskRepositorySQL) CreateGroup(group Group) (Group, error) {
 // UpdateGroup - allows you to update an existing group in the database by ID
 func (repo TaskRepositorySQL) UpdateGroup(group Group) (Group, error) {
 	var updatedGroup Group
-	err := repo.DB.QueryRow("UPDATE groups SET title=$1 WHERE group_id=$2 RETURNING group_id, title", group.Title, group.ID).Scan(&updatedGroup.ID, &updatedGroup.Title)
+	err := repo.DB.QueryRow("UPDATE groups SET title=$1 WHERE id=$2 RETURNING id, title", group.Title, group.ID).Scan(&updatedGroup.ID, &updatedGroup.Title)
 	if err != nil {
 		return updatedGroup, err
 	}
@@ -55,7 +59,7 @@ func (repo TaskRepositorySQL) UpdateGroup(group Group) (Group, error) {
 
 // DeleteGroup - allows to delete an existing group from database by ID
 func (repo TaskRepositorySQL) DeleteGroup(id int) error {
-	_, err := repo.DB.Exec("DELETE FROM groups WHERE group_id = $1", id)
+	_, err := repo.DB.Exec("DELETE FROM groups WHERE id = $1", id)
 	if err != nil {
 		return err
 	}
@@ -65,7 +69,7 @@ func (repo TaskRepositorySQL) DeleteGroup(id int) error {
 // GetTasks - allows you to get all tasks from the database
 func (repo TaskRepositorySQL) GetTasks() (TasksResponse, error) {
 	var tasks TasksResponse
-	tasksTable, err := repo.DB.Query("SELECT * FROM tasks ORDER BY task_id")
+	tasksTable, err := repo.DB.Query("SELECT * FROM tasks ORDER BY id")
 	if err != nil {
 		return tasks, err
 	}
@@ -83,13 +87,17 @@ func (repo TaskRepositorySQL) GetTasks() (TasksResponse, error) {
 		}
 		tasks.Tasks = append(tasks.Tasks, task)
 	}
+
+	if err = tasksTable.Err(); err != nil {
+		return tasks, err
+	}
 	return tasks, nil
 }
 
 // CreateTask - allows you to create a new task in the database
 func (repo TaskRepositorySQL) CreateTask(task Task) (Task, error) {
 	var createdTask Task
-	err := repo.DB.QueryRow("INSERT INTO tasks(title, group_id) VALUES($1,$2) RETURNING task_id, title, group_id", task.Title, task.GroupID).Scan(&createdTask.ID, &createdTask.Title, &createdTask.GroupID)
+	err := repo.DB.QueryRow("INSERT INTO tasks(title, group_id) VALUES($1,$2) RETURNING id, title, group_id", task.Title, task.GroupID).Scan(&createdTask.ID, &createdTask.Title, &createdTask.GroupID)
 	if err != nil {
 		return createdTask, err
 	}
@@ -99,7 +107,7 @@ func (repo TaskRepositorySQL) CreateTask(task Task) (Task, error) {
 // UpdateTask - allows you to update an existing task in the database by ID
 func (repo TaskRepositorySQL) UpdateTask(task Task) (Task, error) {
 	var updatedTask Task
-	err := repo.DB.QueryRow("UPDATE tasks SET title=$1, group_id=$2 WHERE task_id=$3 RETURNING task_id, title, group_id;", task.Title, task.GroupID, task.ID).Scan(&updatedTask.ID, &updatedTask.Title, &updatedTask.GroupID)
+	err := repo.DB.QueryRow("UPDATE tasks SET title=$1, group_id=$2 WHERE id=$3 RETURNING id, title, group_id;", task.Title, task.GroupID, task.ID).Scan(&updatedTask.ID, &updatedTask.Title, &updatedTask.GroupID)
 	if err != nil {
 		return updatedTask, err
 	}
@@ -108,7 +116,7 @@ func (repo TaskRepositorySQL) UpdateTask(task Task) (Task, error) {
 
 // DeleteTask - allows to delete an existing task from database by ID
 func (repo TaskRepositorySQL) DeleteTask(id int) error {
-	_, err := repo.DB.Exec("DELETE FROM tasks WHERE task_id = $1", id)
+	_, err := repo.DB.Exec("DELETE FROM tasks WHERE id = $1", id)
 	if err != nil {
 		return err
 	}
@@ -137,7 +145,7 @@ func (repo TaskRepositorySQL) DeleteTimeframe(id int) error {
 // getTasksByGroupID - allows to get all tasks from database by group ID
 func (repo TaskRepositorySQL) getTasksByGroupID(id int) ([]Task, error) {
 	var tasks []Task
-	taskTable, err := repo.DB.Query("SELECT * FROM tasks WHERE group_id=$1 ORDER BY task_id", id)
+	taskTable, err := repo.DB.Query("SELECT * FROM tasks WHERE group_id=$1 ORDER BY id", id)
 	if err != nil {
 		return tasks, err
 	}
@@ -155,6 +163,10 @@ func (repo TaskRepositorySQL) getTasksByGroupID(id int) ([]Task, error) {
 			return tasks, err
 		}
 		tasks = append(tasks, task)
+	}
+
+	if err = taskTable.Err(); err != nil {
+		return tasks, err
 	}
 	return tasks, nil
 }
@@ -176,6 +188,10 @@ func (repo TaskRepositorySQL) getTimeframesByTaskID(id int) ([]Timeframe, error)
 		}
 		timeframes = append(timeframes, timeframe)
 	}
+
+	if err = timeframesTable.Err(); err != nil {
+		return timeframes, err
+	}
 	return timeframes, err
 }
 
@@ -183,7 +199,7 @@ func (repo TaskRepositorySQL) getTimeframesByTaskID(id int) ([]Timeframe, error)
 //CheckGroupByID - allows you to check the existence of a group by ID
 func (repo TaskRepositorySQL) CheckGroupByID(group Group) error{
 	var id int
-	 err := repo.DB.QueryRow("SELECT group_id FROM groups WHERE group_id=$1", group.ID).Scan(&id)
+	 err := repo.DB.QueryRow("SELECT id FROM groups WHERE id=$1", group.ID).Scan(&id)
 	 if err!= nil {
 		return err
 	}
@@ -193,7 +209,7 @@ func (repo TaskRepositorySQL) CheckGroupByID(group Group) error{
 //CheckGroupByID -  allows you to check the presence of a task by ID and the validity of the group ID
 func (repo TaskRepositorySQL) CheckTaskByID(task Task) error{
 	var stub int
-	err := repo.DB.QueryRow("SELECT task_id FROM tasks WHERE task_id=$1", task.ID).Scan(&stub)
+	err := repo.DB.QueryRow("SELECT id FROM tasks WHERE id=$1", task.ID).Scan(&stub)
 	if err!= nil {
 		return err
 	}
