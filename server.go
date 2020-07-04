@@ -25,13 +25,12 @@ func main() {
 	TasksRouter := router.PathPrefix("/tasks").Subrouter()
 	TimeframesRouter := router.PathPrefix("/timeframes").Subrouter()
 
-	GroupsRouter.HandleFunc("/", handlers.GetGroups).Methods(http.MethodGet)
-
+	GroupsRouter.HandleFunc("", handlers.GetGroups).Methods(http.MethodGet)
 	GroupsRouter.HandleFunc("/", handlers.CreateGroup).Methods(http.MethodPost)
 	GroupsRouter.HandleFunc("/{id}", handlers.UpdateGroup).Methods(http.MethodPut)
 	GroupsRouter.HandleFunc("/{id}", handlers.DeleteGroup).Methods(http.MethodDelete)
 
-	TasksRouter.HandleFunc("/", handlers.GetTasks).Methods(http.MethodGet)
+	TasksRouter.HandleFunc("", handlers.GetTasks).Methods(http.MethodGet)
 	TasksRouter.HandleFunc("/", handlers.CreateTask).Methods(http.MethodPost)
 	TasksRouter.HandleFunc("/{id}", handlers.UpdateTask).Methods(http.MethodPut)
 	TasksRouter.HandleFunc("/{id}", handlers.DeleteTask).Methods(http.MethodDelete)
