@@ -9,7 +9,7 @@ import (
 )
 
 // DBInit - allows you to create a database connection
-func DBInit() (*sql.DB, error) {
+func (repo *TaskRepositorySQL) DBInit() (*sql.DB, error) {
 	err := godotenv.Load()
 	if err != nil {
 		return nil, err
@@ -29,5 +29,6 @@ func DBInit() (*sql.DB, error) {
 	if err = db.Ping(); err != nil {
 		return nil, err
 	}
+	repo.DB = db
 	return db, nil
 }

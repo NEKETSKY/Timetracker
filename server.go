@@ -8,17 +8,15 @@ import (
 	"net/http"
 )
 
-var taskRepositorySQL = dbrepository.TaskRepositorySQL{}
-
 func main() {
-	var err error
-	taskRepositorySQL.DB, err = dbrepository.DBInit()
+	taskRepositorySQL := dbrepository.DBGetter()
+	connect, err := taskRepositorySQL.DBInit()
 	if err != nil {
 		log.Panic(err)
 	}
 
-	handlers.ConnectWithHandlers(taskRepositorySQL.DB)
-	defer taskRepositorySQL.DB.Close()
+	handlers.ConnectWithHandlers(connect)
+	defer connect.Close()
 
 	router := mux.NewRouter()
 	GroupsRouter := router.PathPrefix("/groups").Subrouter()

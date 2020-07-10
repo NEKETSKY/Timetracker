@@ -1,5 +1,7 @@
 package dbrepository
 
+import "database/sql"
+
 type (
 	RepositorySQL interface {
 		GetGroups() (GroupsResponse, error)
@@ -14,8 +16,9 @@ type (
 		DeleteTimeframe(id int) error
 		getTasksByGroupID(id int) ([]Task, error)
 		getTimeframesByTaskID(id int) ([]Timeframe, error)
-		checkGroupByID(group Group) error
-		checkTastByID(task Task) error
+		CheckGroupByID(group Group) error
+		CheckTaskByID(task Task) error
+		DBInit() (*sql.DB, error)
 	}
 
 	Group struct {

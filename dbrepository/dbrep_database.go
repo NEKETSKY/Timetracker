@@ -5,6 +5,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var repSQL RepositorySQL = &TaskRepositorySQL{}
+
+func DBGetter() RepositorySQL {
+	return repSQL
+}
+
 type TaskRepositorySQL struct {
 	DB *sql.DB
 }
@@ -195,26 +201,25 @@ func (repo TaskRepositorySQL) getTimeframesByTaskID(id int) ([]Timeframe, error)
 	return timeframes, err
 }
 
-
 //CheckGroupByID - allows you to check the existence of a group by ID
-func (repo TaskRepositorySQL) CheckGroupByID(group Group) error{
+func (repo TaskRepositorySQL) CheckGroupByID(group Group) error {
 	var id int
-	 err := repo.DB.QueryRow("SELECT id FROM groups WHERE id=$1", group.ID).Scan(&id)
-	 if err!= nil {
+	err := repo.DB.QueryRow("SELECT id FROM groups WHERE id=$1", group.ID).Scan(&id)
+	if err != nil {
 		return err
 	}
 	return nil
 }
 
 //CheckGroupByID -  allows you to check the presence of a task by ID and the validity of the group ID
-func (repo TaskRepositorySQL) CheckTaskByID(task Task) error{
+func (repo TaskRepositorySQL) CheckTaskByID(task Task) error {
 	var stub int
 	err := repo.DB.QueryRow("SELECT id FROM tasks WHERE id=$1", task.ID).Scan(&stub)
-	if err!= nil {
+	if err != nil {
 		return err
 	}
 	err = repo.DB.QueryRow("SELECT group_id FROM tasks WHERE group_id=$1", task.GroupID).Scan(&stub)
-	if err!= nil {
+	if err != nil {
 		return err
 	}
 	return nil
